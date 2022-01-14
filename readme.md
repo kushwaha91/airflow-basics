@@ -14,7 +14,7 @@ chmod -R 777 logs
 docker-compose up airflow-init 
 docker-compose up
 
-# use the following vloumes to avoid the access denied issues
+# use the following volumes to avoid the access denied issues
     - ./dags:/usr/local/airflow/dags
     - ./logs:/usr/local/airflow/logs
     - ./plugins:/usr/local/airflow/plugins
