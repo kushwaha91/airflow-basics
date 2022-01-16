@@ -1,7 +1,12 @@
 # Simplest possible airflow dag creation
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+
+def py_func(x: str):
+    print("python function invoked from airflow")
+    print("Message:: "+x)
 
 # You can override them on a per-task basis during operator initialization
 default_args = {
@@ -32,10 +37,14 @@ with DAG(
     default_args=default_args,
     description='A simple tutorial DAG',
     schedule_interval=timedelta(days=1),
+    start_date=datetime(2022, 1, 15),
     catchup=False,
     tags=['simplest','simple']) as dag:
     
     task1 = BashOperator(task_id = 'show-time', bash_command = 'time')
     task2 = BashOperator(task_id = 'show-date', bash_command = 'date')
+    task3 = PythonOperator(task_id = 'Python-Operate', 
+                           python_callable=py_func,
+                           op_kwargs={"x" : "Hello Airflow Welcome!!"})
     
-    task1 >> task2
+    task1 >> task2 >> task3
